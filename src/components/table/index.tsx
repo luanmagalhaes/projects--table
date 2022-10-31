@@ -11,7 +11,7 @@ export const Table = ({
       localization={{
         pagination: {
           labelRowsSelect: "Rows",
-          labelDisplayedRows: "{from}-{to} de {count}", // perguntar
+          labelDisplayedRows: "{from}-{to} of {count}",
         },
         toolbar: {
           searchPlaceholder: "Search here for a project",
