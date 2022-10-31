@@ -1,5 +1,6 @@
-import { styled } from "@mui/material";
+import { FormHelperText, styled } from "@mui/material";
 import {
+  Alert,
   Button,
   FormControl,
   InputLabel,
@@ -7,23 +8,20 @@ import {
   Select,
   TextField,
 } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import COLORS from "../../../assets/colors";
+import { useDispatch, useSelector } from "react-redux";
+import { StateProps } from "../../../pages/landing";
+import { ActionTypes } from "../../../store/Actions/index";
+import { theme } from "../../../utils/theme";
 
 const Container = styled("div")(() => ({
   maxWidth: "380px",
   width: "100%",
+  [theme.breakpoints.down("sm")]: {},
 }));
 
 const EditableContainer = styled("div")(() => ({
-  alignItems: "center",
-  display: "flex",
-  flexDirection: "column",
-  gap: 22,
-  width: "100%",
-}));
-
-const ProjectInput = styled(TextField)(() => ({
   alignItems: "center",
   display: "flex",
   flexDirection: "column",
@@ -36,9 +34,10 @@ const BottomContainer = styled("div")(() => ({
   flexDirection: "column",
   "> button": {
     color: COLORS.solid,
-    background: COLORS.lightBlue,
-    border: `1px solid ${"#444444"}`,
-    margin: "16px 40px",
+    background: COLORS.darkBlue,
+    border: `2px solid ${COLORS.solid}`,
+    borderRadius: 8,
+    margin: "16px 0px",
     "&:hover": {
       background: COLORS.brown,
       fontWeight: 500,
@@ -46,61 +45,175 @@ const BottomContainer = styled("div")(() => ({
   },
 }));
 
-const FirstButton = styled(Button)(() => ({}));
-
-const SecondButton = styled(Button)(({ theme }) => ({}));
-
-export const ProjectForm = ({ error, text, setOpen }: any) => {
+export const ProjectForm = () => {
   const [projectName, setProjectName] = useState("");
-  const [projectNameError, setProjectNameError] = useState("");
-  console.log(projectName);
+  const [projectDescription, setProjectDescription] = useState("");
+  const [user, setUser] = useState("");
+
+  const [nameErrorMessage, setNameErrorMessage] = useState("");
+  const [selectErrorMessage, setSelectErrorMessage] = useState("");
+  const [projectNameError, setProjectNameError] = useState(false);
+  const [selectError, setSelectError] = useState(false);
+
+  const [showAlert, setShowAlert] = useState(false);
+
+  const dispatch = useDispatch();
+  const listOfProjects = useSelector((state: StateProps) => state.projectList);
+  const listOfUsers = useSelector((state: StateProps) => state.userList);
+  const projectId = useSelector((state: StateProps) => state.id);
+
+  useEffect(() => {
+    if (listOfProjects.length > 0 && projectId) {
+      const foundProject = listOfProjects.find(
+        (project) => project.id === projectId
+      );
+      setProjectName(foundProject!.name);
+      setProjectDescription(foundProject!.description);
+      setUser(foundProject!.user);
+    }
+  }, [listOfProjects, projectId]);
+
+  const validateFields = () => {
+    let correct = true;
+    if (projectName.length < 1) {
+      correct = false;
+      setProjectNameError(true);
+      setNameErrorMessage("Project name needs to have at least 3 characters");
+    }
+    if (user.length < 1) {
+      correct = false;
+      setSelectError(true);
+      setSelectErrorMessage("Please select a name");
+    }
+    return correct;
+  };
+
+  const hideAlert = () => {
+    setTimeout(() => {
+      setShowAlert(false);
+      hideDialog();
+    }, 6000);
+  };
+
+  const createProject = () => {
+    if (validateFields()) {
+      dispatch({
+        type: ActionTypes.ADD_PROJECT,
+        payload: {
+          id: listOfProjects.length + 1,
+          name: projectName,
+          description: projectDescription,
+          user: user,
+        },
+      });
+      setShowAlert(true);
+      hideAlert();
+    } else {
+      dispatch({
+        type: ActionTypes.ERROR,
+        payload: true,
+      });
+    }
+  };
+
+  const hideDialog = () => {
+    dispatch({ type: ActionTypes.HIDE_DIALOG });
+  };
+
+  const editProject = () => {
+    dispatch({
+      type: ActionTypes.EDIT_PROJECT,
+      payload: {
+        id: projectId,
+        name: projectName,
+        description: projectDescription,
+        user: user,
+      },
+    });
+    hideDialog();
+  };
+
   return (
     <Container>
       <EditableContainer>
-        <ProjectInput
+        <TextField
           value={projectName}
           required
           id="outlined-required"
           label="PROJECT NAME"
-          defaultValue="Please type your project name"
-          error={projectName.length < 0}
-          helperText="Incorrect entry."
+          placeholder="Please type your project name"
+          error={projectNameError}
+          helperText={nameErrorMessage}
           fullWidth
+          onFocus={() => {
+            dispatch({
+              type: ActionTypes.ERROR,
+              payload: false,
+            });
+            setProjectNameError(false);
+            setNameErrorMessage("");
+          }}
+          onChange={(e) => {
+            setProjectName(e.target.value);
+          }}
         />
         <TextField
+          value={projectDescription}
           id="filled-multiline-static"
           label="DESCRIPTION"
           multiline
           rows={4}
-          defaultValue="Please give a brief description of your project"
+          placeholder="Please give a brief description of your project"
           variant="filled"
+          fullWidth
+          onChange={(e) => {
+            setProjectDescription(e.target.value);
+          }}
         />
         <FormControl fullWidth>
           <InputLabel>USERS</InputLabel>
-          <Select value={""} label="USERS" onChange={() => {}}>
-            <MenuItem value={10}>user 1</MenuItem>
-            <MenuItem value={20}>user 2</MenuItem>
-            <MenuItem value={30}>user 3</MenuItem>
+          <Select
+            required
+            error={selectError}
+            value={user}
+            label="USERS"
+            onFocus={() => {
+              dispatch({
+                type: ActionTypes.ERROR,
+                payload: false,
+              });
+              setSelectError(false);
+              setSelectErrorMessage("");
+            }}
+            onChange={(e) => {
+              setSelectError(false);
+              setUser(e.target.value);
+            }}
+          >
+            {listOfUsers.map((item) => (
+              <MenuItem value={item.name}>{item.name}</MenuItem>
+            ))}
           </Select>
+          {selectError && (
+            <FormHelperText style={{ color: "red" }}>
+              {selectErrorMessage}
+            </FormHelperText>
+          )}
         </FormControl>
       </EditableContainer>
       <BottomContainer>
-        <FirstButton
-          onClick={() => {
-            setProjectName(projectName);
-          }}
-        >
-          CONFIRM
-        </FirstButton>
-        <SecondButton
-          onClick={() => {
-            projectName.length < 0 && setProjectNameError("erro");
-            setOpen(false);
-          }}
-        >
-          CLOSE
-        </SecondButton>
+        {projectId ? (
+          <Button onClick={editProject}>CONFIRM</Button>
+        ) : (
+          <Button onClick={createProject}>CONFIRM</Button>
+        )}
+        <Button onClick={hideDialog}>CLOSE</Button>
       </BottomContainer>
+      {showAlert && (
+        <Alert severity="success">
+          This is a success alert — check it out!
+        </Alert>
+      )}
     </Container>
   );
 };

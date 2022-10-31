@@ -4,17 +4,9 @@ import { DialogComponent } from "../DialogComponent";
 import { fadeIn } from "../../../utils/animation";
 import { ProjectForm } from "../../forms/ProjectForm";
 import { UserForm } from "../../forms/UserForm";
-
-interface DialogWrapperProps {
-  className?: string;
-  type?: any;
-  open: any;
-  setOpen: any;
-}
-
-const Container = styled("div")(({ theme }) => ({
-  [theme.breakpoints.down("md")]: {},
-}));
+import { useDispatch, useSelector } from "react-redux";
+import { StateProps } from "../../../pages/landing";
+import { ActionTypes } from "../../../store/Actions/index";
 
 const Layer = styled("div")(({ theme }) => ({
   height: "100vh",
@@ -42,28 +34,27 @@ const Banner = styled(motion.div)(({ theme }) => ({
   [theme.breakpoints.down("md")]: {},
 }));
 
-export const Dialog = ({
-  className,
-  type,
-  open,
-  setOpen,
-}: DialogWrapperProps) => {
+export const Dialog = () => {
+  const open = useSelector((state: StateProps) => state.dialog);
+  const formType = useSelector((state: StateProps) => state.formType);
+  const dispatch = useDispatch();
+
+  const hideDialog = () => {
+    dispatch({ type: ActionTypes.HIDE_DIALOG });
+  };
+
   const FormTypes = {
-    PROJECT: <ProjectForm setOpen={setOpen} />,
+    PROJECT: <ProjectForm />,
     USER: <UserForm />,
   };
-  return (
-    open && (
-      <Container className={className}>
-        <>
-          <Banner initial="initial" animate="animate" variants={fadeIn}>
-            <Layer onClick={() => setOpen(false)} />
-            <DialogComponent>
-              <>{FormTypes.PROJECT}</>
-            </DialogComponent>
-          </Banner>
-        </>
-      </Container>
-    )
-  );
+
+  return open ? (
+    <Banner initial="initial" animate="animate" variants={fadeIn}>
+      <Layer onClick={hideDialog} />
+      <DialogComponent>
+        {formType === "user" && FormTypes.USER}
+        {formType === "project" && FormTypes.PROJECT}
+      </DialogComponent>
+    </Banner>
+  ) : null;
 };

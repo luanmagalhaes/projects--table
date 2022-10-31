@@ -6,28 +6,50 @@ import { Dialog } from "./../../components/dialog/DialogWrapper/index";
 import { styled } from "@mui/material";
 import COLORS from "./../../assets/colors/index";
 import { theme } from "../../utils/theme";
+import { useDispatch, useSelector } from "react-redux";
+import { ActionTypes } from "../../store/Actions/index";
 
-interface ProjectProps {
+export interface ShowDialogProps {
+  id?: number;
+  formType: string;
+}
+
+export interface ProjectItemProps {
   id: number;
   name: string;
   description: string;
   user: string;
 }
 
+export interface UserItemProps {
+  id: number;
+  name: string;
+  email: string;
+}
+
+export interface StateProps {
+  id: number;
+  projectList: ProjectItemProps[];
+  userList: UserItemProps[];
+  dialog?: boolean;
+  formType: string;
+  error: boolean;
+}
+
 const Root = styled("div")(() => ({
-  margin: "60px auto",
-  padding: "40px 80px 120px",
-  maxWidth: 1200,
-  width: "100vw",
-  [theme.breakpoints.down("sm")]: {
-    paddingLeft: 16,
-    paddingRight: 16,
-    paddingTop: 32,
+  background: COLORS.lightGray,
+  borderRadius: 8,
+  padding: "40px 40px",
+  width: "100%",
+  height: "100vh",
+  [theme.breakpoints.down("md")]: {
+    padding: "12px 12px",
   },
 }));
 
 const ButtonContainer = styled("div")(() => ({
   display: "flex",
+  width: "100%",
   justifyContent: "space-evenly",
   paddingBottom: 12,
   "> button": {
@@ -50,42 +72,56 @@ const ButtonContainer = styled("div")(() => ({
 }));
 
 export const Landing = () => {
-  const [projectList, setProjectList] = useState<ProjectProps[]>([
-    { id: 1, name: "mary", description: "aqui", user: "aqui" },
-    { id: 2, name: "john", description: "aqui", user: "aqui" },
-    { id: 3, name: "doe", description: "aqui", user: "aqui" },
-    { id: 4, name: "aqui", description: "aqui", user: "aqui" },
-  ]);
-  const [loading, setLoading] = useState<boolean>(false);
+  const listOfProjects = useSelector((state: StateProps) => state.projectList);
+  const dispatch = useDispatch();
+
+  const editProject = (id?: number) => {
+    showDialog({ formType: "project", id });
+  };
+
+  const showDialog = ({ formType, id }: ShowDialogProps) => {
+    dispatch({ type: ActionTypes.SHOW_DIALOG, payload: { formType, id } });
+  };
 
   const TableStyle = {
     background: COLORS.solid,
     color: COLORS.black,
+    cursor: "pointer",
     paddingBottom: "5px",
     paddingLeft: "15px",
     paddingRight: "15px",
     paddingTop: "5px",
   };
 
-  const [open, setOpen] = useState(false);
-
   return (
     <Root>
-      <Dialog open={open} setOpen={setOpen} />
+      <Dialog />
       <ButtonContainer>
-        <Button onClick={() => setOpen(true)} variant="text">
+        <Button
+          onClick={() => {
+            showDialog({ formType: "project", id: 0 });
+          }}
+          variant="text"
+        >
           New Project
         </Button>
-        <Button variant="text">New User</Button>
+        <Button
+          onClick={() => {
+            showDialog({ formType: "user" });
+          }}
+          variant="text"
+        >
+          New User
+        </Button>
       </ButtonContainer>
       <Table
         title="Projects List"
-        data={projectList}
+        data={listOfProjects}
         options={{
           headerStyle: {
-            background: COLORS.pink,
-            color: COLORS.black,
-            fontWeight: 500,
+            background: COLORS.gray,
+            color: COLORS.solid,
+            fontWeight: "bold",
             zIndex: 0,
           },
         }}
@@ -117,9 +153,15 @@ export const Landing = () => {
               background: COLORS.solid,
               width: "5%",
             },
-            render: () => (
-              <Icon onClick={() => {}}>
-                <EditIcon fontSize="small" />
+
+            //@ts-ignore
+            render: ({ id }) => (
+              <Icon
+                onClick={() => {
+                  editProject(id);
+                }}
+              >
+                <EditIcon cursor="pointer" fontSize="small" />
               </Icon>
             ),
           },
