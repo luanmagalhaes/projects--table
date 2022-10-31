@@ -5,32 +5,32 @@ import { fadeIn } from "../../../utils/animation";
 import { ProjectForm } from "../../forms/ProjectForm";
 import { UserForm } from "../../forms/UserForm";
 import { useDispatch, useSelector } from "react-redux";
-import { StateProps } from "../../../pages/landing";
 import { ActionTypes } from "../../../store/Actions/index";
+import { StateProps } from "../../../utils/interface";
 
 const Layer = styled("div")(({ theme }) => ({
+  background: "rgba(0, 0, 0, 0.4)",
   height: "100vh",
   left: 0,
   position: "fixed",
   top: 0,
   width: "100vw",
   zIndex: 3,
-  background: "rgba(0, 0, 0, 0.4)",
 }));
 
 const Banner = styled(motion.div)(({ theme }) => ({
-  boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.4)",
-  borderRadius: 4,
-  zIndex: 3,
-  position: "absolute",
-  top: 0,
-  left: 0,
-  bottom: 0,
-  right: 0,
-  display: "flex",
-  justifyContent: "center",
   alignItems: "center",
+  borderRadius: 4,
+  bottom: 0,
+  boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.4)",
+  display: "flex",
+  left: 0,
+  justifyContent: "center",
+  position: "absolute",
+  right: 0,
+  top: 0,
   width: "100%",
+  zIndex: 3,
   [theme.breakpoints.down("md")]: {},
 }));
 
