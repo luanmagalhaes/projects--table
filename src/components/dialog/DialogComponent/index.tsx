@@ -1,12 +1,7 @@
 import { styled } from "@mui/material";
-import React from "react";
 import COLORS from "../../../assets/colors";
 import { useSelector } from "react-redux";
-import { StateProps } from "../../../pages/landing";
-interface DialogComponentProps {
-  className?: string;
-  children: React.ReactNode;
-}
+import { DialogComponentProps, StateProps } from "../../../utils/interface";
 
 const Container = styled("div", {
   shouldForwardProp: (prop) => prop !== "error",
@@ -17,10 +12,10 @@ const Container = styled("div", {
   display: "flex",
   flexDirection: "column",
   justifyContent: "center",
-  padding: 40,
-  zIndex: 4,
   maxWidth: 560,
+  padding: 40,
   width: "100%",
+  zIndex: 4,
   [theme.breakpoints.down("md")]: {
     padding: 20,
     width: "80%",
