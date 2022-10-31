@@ -2,7 +2,6 @@ import MaterialTable, { MaterialTableProps } from "material-table";
 
 export const Table = ({
   columns,
-  isLoading,
   title,
   data,
   ...rest
@@ -21,7 +20,6 @@ export const Table = ({
       }}
       options={rest.options}
       columns={columns}
-      isLoading={isLoading}
       title={title}
       data={data}
     />
