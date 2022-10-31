@@ -11,14 +11,12 @@ import {
 import { useEffect, useState } from "react";
 import COLORS from "../../../assets/colors";
 import { useDispatch, useSelector } from "react-redux";
-import { StateProps } from "../../../pages/landing";
 import { ActionTypes } from "../../../store/Actions/index";
-import { theme } from "../../../utils/theme";
+import { StateProps } from "../../../utils/interface";
 
 const Container = styled("div")(() => ({
   maxWidth: "380px",
   width: "100%",
-  [theme.breakpoints.down("sm")]: {},
 }));
 
 const EditableContainer = styled("div")(() => ({
@@ -92,7 +90,7 @@ export const ProjectForm = () => {
     setTimeout(() => {
       setShowAlert(false);
       hideDialog();
-    }, 6000);
+    }, 1000);
   };
 
   const createProject = () => {
@@ -134,7 +132,7 @@ export const ProjectForm = () => {
   };
 
   return (
-    <Container>
+    <Container data-testid="project-form">
       <EditableContainer>
         <TextField
           value={projectName}
@@ -156,6 +154,9 @@ export const ProjectForm = () => {
           onChange={(e) => {
             setProjectName(e.target.value);
           }}
+          inputProps={{
+            "aria-label": "project-name",
+          }}
         />
         <TextField
           value={projectDescription}
@@ -169,13 +170,16 @@ export const ProjectForm = () => {
           onChange={(e) => {
             setProjectDescription(e.target.value);
           }}
+          inputProps={{
+            "aria-label": "project-description",
+          }}
         />
         <FormControl fullWidth>
           <InputLabel>USERS</InputLabel>
           <Select
+            value={user}
             required
             error={selectError}
-            value={user}
             label="USERS"
             onFocus={() => {
               dispatch({
@@ -189,6 +193,7 @@ export const ProjectForm = () => {
               setSelectError(false);
               setUser(e.target.value);
             }}
+            data-testid="user-select"
           >
             {listOfUsers.map((item) => (
               <MenuItem value={item.name}>{item.name}</MenuItem>
@@ -210,8 +215,17 @@ export const ProjectForm = () => {
         <Button onClick={hideDialog}>CLOSE</Button>
       </BottomContainer>
       {showAlert && (
-        <Alert severity="success">
-          This is a success alert — check it out!
+        <Alert
+          sx={{
+            "& .MuiAlert-message": {
+              display: "flex",
+              justifyContent: "center",
+              width: "100%",
+            },
+          }}
+          severity="success"
+        >
+          You've created a new project!
         </Alert>
       )}
     </Container>

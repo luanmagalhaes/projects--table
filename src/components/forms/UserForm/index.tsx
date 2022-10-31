@@ -1,10 +1,10 @@
 import { styled } from "@mui/material";
-import { Button, TextField } from "@mui/material";
+import { Alert, Button, TextField } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import COLORS from "../../../assets/colors";
-import { StateProps } from "../../../pages/landing";
 import { ActionTypes } from "../../../store/Actions";
 import { useState } from "react";
+import { StateProps } from "../../../utils/interface";
 
 const Container = styled("div")(() => ({
   maxWidth: "380px",
@@ -22,10 +22,10 @@ const BottomContainer = styled("div")(() => ({
   display: "flex",
   flexDirection: "column",
   "> button": {
-    color: COLORS.solid,
     background: COLORS.darkBlue,
     border: `2px solid ${COLORS.solid}`,
     borderRadius: 8,
+    color: COLORS.solid,
     margin: "16px 0px",
     "&:hover": {
       background: COLORS.brown,
@@ -42,6 +42,8 @@ export const UserForm = () => {
   const [emailErrorMessage, setEmailErrorMessage] = useState("");
   const [nameError, setNameError] = useState(false);
   const [emailError, setEmailError] = useState(false);
+
+  const [showAlert, setShowAlert] = useState(false);
 
   const dispatch = useDispatch();
   const listOfUsers = useSelector((state: StateProps) => state.userList);
@@ -69,6 +71,13 @@ export const UserForm = () => {
     return correct;
   };
 
+  const hideAlert = () => {
+    setTimeout(() => {
+      setShowAlert(false);
+      hideDialog();
+    }, 1000);
+  };
+
   const createUser = () => {
     if (validateFields()) {
       dispatch({
@@ -79,7 +88,8 @@ export const UserForm = () => {
           email: userEmail,
         },
       });
-      hideDialog();
+      setShowAlert(true);
+      hideAlert();
     }
   };
 
@@ -125,6 +135,20 @@ export const UserForm = () => {
         <Button onClick={createUser}>CONFIRM</Button>
         <Button onClick={hideDialog}>CLOSE</Button>
       </BottomContainer>
+      {showAlert && (
+        <Alert
+          sx={{
+            "& .MuiAlert-message": {
+              display: "flex",
+              justifyContent: "center",
+              width: "100%",
+            },
+          }}
+          severity="success"
+        >
+          You've created a new user!
+        </Alert>
+      )}
     </Container>
   );
 };
