@@ -200,7 +200,7 @@ export const ProjectForm = () => {
             ))}
           </Select>
           {selectError && (
-            <FormHelperText style={{ color: "red" }}>
+            <FormHelperText style={{ color: COLORS.red }}>
               {selectErrorMessage}
             </FormHelperText>
           )}
