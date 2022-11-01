@@ -18,7 +18,6 @@ You can add a new project to the table, add a new user as well as edit a project
 ### 
 I have also uploaded it to Netlify.
 You may want to go to https://projects-table-xogito.netlify.app/ to check it online.
-I have uploaded it at Netlify.
 
 ### How to run the tests:
 
