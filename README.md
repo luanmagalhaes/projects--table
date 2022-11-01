@@ -4,7 +4,7 @@ It consists of a table that displays different projects with their names, descri
 You can add a new project to the table, add a new user as well as edit a project if you'd like to.
 
 I have created a to-do list on Notion so I could organize the process of creating the project:
-![image](https://user-images.githubusercontent.com/83188919/199250991-a27e3017-953c-4061-9861-ccdec78c54c0.png)
+![image](https://user-images.githubusercontent.com/83188919/199251214-5dcb5668-c243-43f2-bb7c-3bfd9511033d.png)
 
 ### How to begin:
 
