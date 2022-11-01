@@ -3,6 +3,9 @@ This is a project created in React JS using TypeScript, Material UI, Redux, JEST
 It consists of a table that displays different projects with their names, descriptions and users.
 You can add a new project to the table, add a new user as well as edit a project if you'd like to.
 
+I have created a to-do list on Notion so I could organize the process of creating the project:
+![image](https://user-images.githubusercontent.com/83188919/199250991-a27e3017-953c-4061-9861-ccdec78c54c0.png)
+
 ### How to begin:
 
 1. First, clone the project
