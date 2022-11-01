@@ -115,6 +115,10 @@ export const ProjectForm = () => {
   };
 
   const hideDialog = () => {
+    dispatch({
+      type: ActionTypes.ERROR,
+      payload: false,
+    });
     dispatch({ type: ActionTypes.HIDE_DIALOG });
   };
 
@@ -167,6 +171,12 @@ export const ProjectForm = () => {
           placeholder="Please give a brief description of your project"
           variant="filled"
           fullWidth
+          onFocus={() => {
+            dispatch({
+              type: ActionTypes.ERROR,
+              payload: false,
+            });
+          }}
           onChange={(e) => {
             setProjectDescription(e.target.value);
           }}
