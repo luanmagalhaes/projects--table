@@ -90,10 +90,19 @@ export const UserForm = () => {
       });
       setShowAlert(true);
       hideAlert();
+    } else {
+      dispatch({
+        type: ActionTypes.ERROR,
+        payload: true,
+      });
     }
   };
 
   const hideDialog = () => {
+    dispatch({
+      type: ActionTypes.ERROR,
+      payload: false,
+    });
     dispatch({ type: ActionTypes.HIDE_DIALOG });
   };
 
@@ -108,6 +117,10 @@ export const UserForm = () => {
           placeholder="Please type your name"
           fullWidth
           onFocus={() => {
+            dispatch({
+              type: ActionTypes.ERROR,
+              payload: false,
+            });
             setNameError(false);
             setNameErrorMessage("");
           }}
@@ -123,6 +136,10 @@ export const UserForm = () => {
           placeholder="Please type your e-mail"
           fullWidth
           onFocus={() => {
+            dispatch({
+              type: ActionTypes.ERROR,
+              payload: false,
+            });
             setEmailError(false);
             setEmailErrorMessage("");
           }}
