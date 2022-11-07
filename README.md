@@ -7,9 +7,6 @@ You can:
 -> add a new project with its title, description and user;
 -> edit an existing project.
 
-I have created a to-do list on Notion so I could organize the process of creating the project:
-![image](https://user-images.githubusercontent.com/83188919/199736001-aa7c228e-d02a-430b-8a26-ed7c9010bb48.png)
-
 ### How to begin:
 
 1. First, clone the project
