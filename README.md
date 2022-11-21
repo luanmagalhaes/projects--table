@@ -21,7 +21,7 @@ You can:
 
 ### 
 I have also uploaded it to Netlify.
-You may want to go to https://projects-table-xogito.netlify.app/ to check it online.
+You may want to go to https://projects-table-redux.netlify.app/ to check it online.
 
 ### How to run the tests:
 
